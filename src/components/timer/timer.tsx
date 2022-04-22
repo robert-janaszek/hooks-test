@@ -2,30 +2,19 @@ import { useInterval } from '@mantine/hooks';
 import { useEffect, useRef, useState } from 'react';
 import { useWindowActivityInterval } from '../../services/window-activity-interval-hook';
 
-
-
-// const ActivityComponent = (props: { time: number }) => {
-//   const logTime = () => console.log(props.time);
-//   const { start } = useInterval(logTime, 10000);
-//   useEffect(() => start(), []);
-//   return <>{props.time}</>;
-// }
-
-// const ActivityComponent = (props: { time: number }) => {
-//   const ref = useRef<{ time: number }>();
-//   ref.current = props;
-//   const logTime = () => console.log(ref.current!.time);
-//   const { start } = useInterval(logTime, 10000);
-//   useEffect(() => start(), []);
-//   return <>{props.time}</>;
-// }
-
 const ActivityComponent = (props: { time: number }) => {
   const ref = useRef<{ time: number }>();
   ref.current = props;
   const logTime = () => console.log(ref.current!.time);
   useWindowActivityInterval({ callback: logTime, interval: 10000 });
-  return <>{props.time}</>;
+  return <>
+    <div>
+      Activity component: {props.time}
+    </div>
+    <div className='open-console'>
+      Open console and observe 10s interval being logged.
+    </div>
+  </>;
 }
 
 export const TimerComponent = () => {

@@ -40,3 +40,8 @@
 button {
   font-size: calc(10px + 2vmin);
 }
+
+.open-console {
+  font-size: 0.8em;
+  color: grey;
+}
