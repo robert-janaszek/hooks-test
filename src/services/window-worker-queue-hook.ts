@@ -1,6 +1,6 @@
-import { worker } from "./app-queue-hook";
 import { useWindowActivity } from "./window-activity-hook";
 import { useWorkerQueueConditional } from "./worker-queue-conditional-hook";
+import { worker } from "./worker/worker";
 
 export const useWindowWorkerQueue = () => {
   const isActive = useWindowActivity();

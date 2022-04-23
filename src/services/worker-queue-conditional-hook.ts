@@ -2,7 +2,7 @@ import { useListState, useQueue } from "@mantine/hooks";
 import { useEffect } from "react";
 
 export interface WorkerQueueConditionalProps<T> {
-  worker: (entry: T) => Promise<void>;
+  worker: (entry: T) => Promise<unknown>;
   queue: {
     initialValues: T[];
     limit: number;
