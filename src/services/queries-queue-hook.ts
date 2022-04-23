@@ -23,8 +23,8 @@ export const useQueriesQueue = <T, R>(props: WorkerQueryQueue<T, R>) => {
 
   const queryQueue = useQueries(
     props.queue.initialValues.map(entry => ({
-      enabled: state.includes(entry),
       ...props.query(entry),
+      enabled: state.includes(entry),
     })),
   );
 
