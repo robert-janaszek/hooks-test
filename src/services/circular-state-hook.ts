@@ -1,29 +1,21 @@
 import { useState } from "react";
 
-const rangeTrim = (value: number, min: number, max: number) => {
-  if (value < min) return min;
-  if (value > max) return max;
+const rangeCycle = (value: number, min: number, max: number) => {
+  if (value < min) return max;
+  if (value > max) return min;
   return value;
 }
 
 export const useCircularState = <T,>(list: T[], initialPosition: number = 0) => {
-  const [activeIndex, setActiveIndex] = useState(rangeTrim(initialPosition, 0, list.length));
+  const min = 0;
+  const max = list.length - 1;
+  const [activeIndex, setActiveIndex] = useState(rangeCycle(initialPosition, min, max));
   const next = () => {
-    const nextIndex = activeIndex + 1;
-    if (nextIndex >= list.length) {
-      setActiveIndex(0);
-      return;
-    }
-
+    const nextIndex = rangeCycle(activeIndex + 1, min, max);
     setActiveIndex(nextIndex);
   }
   const previous = () => {
-    const previousIndex = activeIndex - 1;
-    if (previousIndex < 0) {
-      setActiveIndex(list.length - 1);
-      return;
-    }
-
+    const previousIndex = rangeCycle(activeIndex - 1, min, max);
     setActiveIndex(previousIndex);
   }
 
