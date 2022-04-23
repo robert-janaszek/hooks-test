@@ -5,7 +5,7 @@ import { TimerComponent } from './components/timer/timer'
 import { useCircularState } from './services/circular-state-hook'
 
 function App() {
-  const [page, nextPage] = useCircularState([1, 2, 3])
+  const { page, next: nextPage } = useCircularState([1, 2, 3, 4], 3);
   return (
     <div className="App">
       <div>

@@ -17,6 +17,19 @@ export const useCircularState = <T,>(list: T[], initialPosition: number = 0) => 
 
     setActiveIndex(nextIndex);
   }
+  const previous = () => {
+    const previousIndex = activeIndex - 1;
+    if (previousIndex < 0) {
+      setActiveIndex(list.length - 1);
+      return;
+    }
 
-  return [list[activeIndex], next] as const;
+    setActiveIndex(previousIndex);
+  }
+
+  return {
+    page: list[activeIndex],
+    next,
+    previous,
+  };
 }
