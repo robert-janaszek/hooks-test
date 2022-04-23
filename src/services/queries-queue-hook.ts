@@ -13,7 +13,7 @@ export interface QueriesQueueProps<T, R> {
 export const useQueriesQueue = <T, R>(props: QueriesQueueProps<T, R>) => {
   const { state, update, cleanQueue } = useQueue<T>({
     initialValues: props.queue.initialValues,
-    limit: props.queue.limit
+    limit: props.queue.limit,
   });
   const markItemReady = (entry: T) => {
     if (state.includes(entry)) {

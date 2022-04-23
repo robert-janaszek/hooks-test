@@ -23,7 +23,7 @@ export const QueryComponent = () => {
       {queries.map((query, index) => <QueryElement key={index} query={query} />)}
     </>
     <div className='open-console'>
-      ...
+      Observe how requests are scheduled in queue.
     </div>
   </>;
 }
