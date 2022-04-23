@@ -2,7 +2,7 @@ import { useQueue } from "@mantine/hooks";
 import { useEffect } from "react";
 import { useQueries, UseQueryOptions } from "react-query";
 
-export interface QueriesQueueProps<T, R> {
+export interface QueriesQueueProps<T> {
   query: (entry: T) => UseQueryOptions<T>;
   queue: {
     initialValues: T[];
@@ -10,7 +10,7 @@ export interface QueriesQueueProps<T, R> {
   };
 }
 
-export const useQueriesQueue = <T, R>(props: QueriesQueueProps<T, R>) => {
+export const useQueriesQueue = <T>(props: QueriesQueueProps<T>) => {
   const { state, update, cleanQueue } = useQueue<T>({
     initialValues: props.queue.initialValues,
     limit: props.queue.limit,
