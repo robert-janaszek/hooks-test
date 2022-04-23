@@ -1,20 +1,20 @@
-import { useWorkerQueryQueue } from "../../services/worker-query-queue";
+import { useQueriesQueue } from "../../services/queries-queue-hook";
 import { worker } from "../../services/worker/worker";
 import { QueryElement } from "./query-element";
 
 export const QueryComponent = () => {
-  const elements = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+  const elements = ['I',  'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
 
-  const queries = useWorkerQueryQueue({
+  const queries = useQueriesQueue({
     queue: {
       initialValues: elements,
       limit: 2,
     },
-    query: {
-      getKey: (entry) => ['data', entry],
-      worker,
-    },
-    shouldLogTime: true,
+    query: (entry) => ({
+      queryKey: ['data', entry],
+      queryFn: () => worker(entry),
+      refetchOnMount: false,
+    }),
   })
 
   return <>
