@@ -1,8 +1,7 @@
 import { useQueue } from "@mantine/hooks";
-import { useEffect } from "react";
-import { useQueries, UseQueryOptions } from "react-query";
+import { useQueries, useQueryClient, UseQueryOptions, UseQueryResult } from "react-query";
 
-export interface QueriesQueueProps<T> {
+export interface QueriesQueueProps<T extends string | number> {
   query: (entry: T) => UseQueryOptions<T>;
   queue: {
     initialValues: T[];
@@ -10,32 +9,49 @@ export interface QueriesQueueProps<T> {
   };
 }
 
-export const useQueriesQueue = <T>(props: QueriesQueueProps<T>) => {
-  const { state, update, cleanQueue } = useQueue<T>({
+/** useQueriesQueue - Fetch specified queries in queue (instead of everyone at once).
+ * Queries are still going to be run all in parallel on remount.
+ * 
+ * To prevent running on remount this use one of those 2 flags:
+ * `staleTime: Infinity` or
+ * `refetchOnMount: false`
+ */
+export const useQueriesQueue = <T extends string | number>(props: QueriesQueueProps<T>) => {
+  const { state: queue, update } = useQueue<T>({
     initialValues: props.queue.initialValues,
     limit: props.queue.limit,
   });
+  const queryClient = useQueryClient();
+
+  const processed = new Set<T>();
+
   const markItemReady = (entry: T) => {
-    if (state.includes(entry)) {
+    if (queue.includes(entry)) {
       update((state) => state.filter(element => element !== entry));
     }
+    processed.add(entry);
   }
-
-  const queryQueue = useQueries(
-    props.queue.initialValues.map(entry => ({
-      ...props.query(entry),
-      enabled: state.includes(entry),
-    })),
-  );
-
-  // useQueries doesn't return key props
-  // only mapping by index is possible
-  queryQueue.map((query, index) => [index, query.isError || query.isFetched] as const)
-    .filter(([, status]) => status)
-    .map(([index]) => props.queue.initialValues[index])
-    .forEach(markItemReady);
+  const queries = props.queue.initialValues.map(entry => ({
+    ...props.query(entry),
+    entry,
+  }));
   
-  useEffect(() => () => cleanQueue(), []);
+  queries.forEach(query => {
+    const queryState = queryClient.getQueryState(query.queryKey!);
+    if (queryState?.status === 'success' || queryState?.status === 'error') {
+      markItemReady(query.entry);
+    }
+    if (queryState?.status === 'loading') {
+      processed.add(query.entry);
+    }
+  });
+
+  const queriesWithEnabledFlag = queries.map(query => ({
+    ...query,
+    enabled: queue.includes(query.entry) || processed.has(query.entry),
+  }));
+
+  const queryQueue = useQueries(queriesWithEnabledFlag);
 
   return queryQueue;
 }
