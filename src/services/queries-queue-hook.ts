@@ -10,7 +10,7 @@ export interface QueriesQueueProps<T extends string | number> {
 }
 
 /** useQueriesQueue - Fetch specified queries in queue (instead of everyone at once).
- * Queries are still going to be run all in parallel on remount.
+ * Queries are still going to be run all in parallel on remount or refetch.
  * 
  * To prevent running on remount this use one of those 2 flags:
  * `staleTime: Infinity` or
