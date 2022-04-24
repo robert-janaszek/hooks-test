@@ -1,5 +1,5 @@
 import { useWorkerQueue } from "./worker-queue-hook";
-import { worker } from './worker/worker';
+import { heavyWorker } from './worker/worker';
 
 export const useAppQueue = () => {
   useWorkerQueue({
@@ -7,7 +7,7 @@ export const useAppQueue = () => {
       initialValues: ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'],
       limit: 2
     },
-    worker,
+    worker: heavyWorker,
     shouldLogTime: true,
   });
 

@@ -1,9 +1,9 @@
 import { useQueriesQueue } from "../../services/queries-queue-hook";
-import { worker } from "../../services/worker/worker";
+import { heavyWorker } from "../../services/worker/worker";
 import { QueryElement } from "./query-element";
 
 export const QueryComponent = () => {
-  const elements = ['I',  'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
+  const elements = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
 
   const queries = useQueriesQueue({
     queue: {
@@ -12,10 +12,11 @@ export const QueryComponent = () => {
     },
     query: (entry) => ({
       queryKey: ['data', entry],
-      queryFn: () => worker(entry),
+      queryFn: () => heavyWorker(entry),
       refetchOnMount: false,
+      retryOnMount: false,
     }),
-  })
+  });
 
   return <>
     <div>Query component</div>
